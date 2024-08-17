@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gibran Banhakeia - Robotic 3D Background</title>
+    <style>
+        /* Basic Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #001f3f, #0f0f0f); /* Darker gradient background */
+            color: #e0e0e0; /* Light gray for better visibility */
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            perspective: 1000px;
+            animation: fadeInPage 3s ease-in-out forwards;
+            opacity: 0; /* Start hidden */
+        }
+
+        /* Enhanced Text Styles */
+        header, section, footer {
+            margin: 20px;
+            padding: 20px;
+            background-color: rgba(15, 15, 15, 0.8); /* Darker semi-transparent overlay behind text */
+            border-radius: 15px;
+            color: #e0e0e0; /* Light gray for better contrast */
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8); /* Cyan glow for a high-tech look */
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            transform: rotateX(2deg);
+            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.7); /* Cyan shadow to make text pop */
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 50px;
+            color: #e0e0e0; /* Light gray text for the header */
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            color: #00ffff; /* Cyan text for better contrast */
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            font-weight: bold;
+            text-shadow: 2px 2px 10px rgba(0, 255, 255, 0.8); /* Stronger shadow for header */
+            margin-left: 30px; /* Spacing between the photo and text */
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 1); /* Cyan shadow around photo */
+            border: 5px solid #00ffff;
+            position: relative;
+            left: 0;
+        }
+
+        section h2 {
+            font-size: 2.5em;
+            color: #00ffff; /* Cyan text for better contrast */
+            border-bottom: 3px solid #00ff00; /* Neon green border */
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 10px rgba(0, 255, 255, 0.7); /* Stronger shadow */
+        }
+
+        section p, ul {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #e0e0e0; /* Light gray text */
+            text-shadow: 2px 2px 7px rgba(0, 255, 255, 0.7); /* Cyan shadow */
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #e0e0e0; /* Light gray text */
+            text-shadow: 2px 2px 7px rgba(0, 255, 255, 0.7); /* Cyan shadow */
+        }
+
+        .contact-info {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        .contact-info a {
+            color: #00ffff; /* Cyan text for better contrast */
+            text-decoration: none;
+            text-shadow: 2px 2px 7px rgba(0, 255, 255, 0.7); /* Cyan shadow */
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+            color: #ff00ff;
+            transition: color 0.3s ease-in-out;
+        }
+
+        /* Hover Effects */
+        h2:hover {
+            color: #00ff00;
+            text-shadow: 4px 4px 12px rgba(0, 255, 0, 1);
+            transform: scale(1.05);
+        }
+
+        /* Page Fade-In Animation */
+        @keyframes fadeInPage {
+            0% {
+                opacity: 0;
+                transform: translateY(100px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Background Canvas */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: transparent;
+        }
+
+        /* Social Media Icons */
+        .social-icons img {
+            width: 30px;
+            height: 30px;
+            margin: 0 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .social-icons img:hover {
+            transform: scale(1.2);
+        }
+
+        /* Section Scroll Animations */
+        section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0f0f0f;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #00ffff;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
+    <header>
+        <img src="https://media.licdn.com/dms/image/D4E03AQEL7N_-0eK2VQ/profile-displayphoto-shrink_400_400/0/1702919910756?e=1729123200&v=beta&t=Bep1UxAxbvqCgplJaFAOV1VFwLf-ICSgFjF-S2eIkIM" alt="Profile Photo" class="profile-photo">
+        <div>
+            <h1>Gibran Banhakeia, PhD</h1>
+            <p>Polyglot Translator | Language Specialist | Computational Linguist | Web Developer</p>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:gibraninter@protonmail.com">gibraninter@protonmail.com</a></p>
+                <p>LinkedIn: <a href="https://www.linkedin.com/in/gibran-banhakeia-phd-62050">Gibran BANHAKEIA</a></p>
+            </div>
+        </div>
+    </header>
+
+    <section id="professional-summary">
+        <h2>Professional Summary</h2>
+        <p>Experienced Polyglot Translator with a proven track record of delivering high-quality translations between English and other languages including French, Spanish, Arabic, and Berber. Master of Applied Linguistics and Stylistics, utilizing advanced tools such as VR headsets, ArcGIS Pro, and ArcMap for simulation, analysis, and translation. Web developer specializing in creating interactive websites with advanced visualization. Expert in transforming complex concepts into immersive digital experiences.</p>
+    </section>
+
+    <section id="skills">
+        <h2>Skills</h2>
+        <ul>
+            <li>Confidential Information Protection</li>
+            <li>Multilingual Translation</li>
+            <li>Word Conflict Identification</li>
+            <li>Translation & Localization</li>
+            <li>Microsoft Office</li>
+            <li>Attention to Detail</li>
+        </ul>
+    </section>
+
+    <section id="work-history">
+        <h2>Work History</h2>
+
+        <h3>Arabic Translator - CCI Group Interpretation and Translation</h3>
+        <p>May 2024 - Present</p>
+        <ul>
+            <li>Translated documents from English to Arabic</li>
+            <li>Monitored progress of translation projects and reported issues</li>
+            <li>Provided consecutive and technical translations</li>
+        </ul>
+
+        <h3>Computational Linguist, Language Specialist and Web Developer - American Translators Association (ATA)</h3>
+        <p>July 2024 - Present</p>
+        <ul>
+            <li>Optimized language processing tools</li>
+            <li>Analyzed linguistic data for system improvements</li>
+            <li>Developed NLP algorithms and models</li>
+            <li>Translated and localized content</li>
+        </ul>
+    </section>
+
+    <section id="education">
+        <h2>Education</h2>
+        <h3>Ph.D. in North African Research: Berber Studies</h3>
+        <p>Lorraine University - Lorraine, France (Expected June 2024)</p>
+
+        <h3>Master of Arts in World Literature And Comparative Studies</h3>
+        <p>Paris University - France, Paris (June 2021)</p>
+
+        <h3>Master of Arts in Literature And Translation</h3>
+        <p>Multidisciplinary Faculty of Nador - Nador, Morocco (June 2019)</p>
+    </section>
+
+    <section id="certifications">
+        <h2>Certifications</h2>
+        <ul>
+            <li>CISSP® - Certified Information Systems Security Professional</li>
+            <li>Ancient Masterpieces of World Literature - Harvard University</li>
+            <li>International Security Management (Specialization) - Erasmus University</li>
+            <li>Introduction to Cybersecurity Tools & Cyber Attacks - IBM</li>
+            <li>CS50 Understanding Technology (six tests) - Harvard University</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Gibran Banhakeia</p>
+        <div class="social-icons">
+            <a href="https://www.linkedin.com/in/gibran-banhakeia-phd-62050"><img src="linkedin-icon.png" alt="LinkedIn"></a>
+            <!-- Add more icons as needed -->
+        </div>
+    </footer>
+
+    <!-- Three.js Setup for Enhanced Robotic Background with Three Scanners -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Preloader Functionality
+        window.addEventListener('load', () => {
+            document.getElementById('preloader').style.display = 'none';
+        });
+
+        // Set up the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / document.body.scrollHeight, 0.1, 10000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        
+        // Set renderer size to the height of the document till the end of certifications
+        const certificationsSection = document.querySelector('#certifications');
+        const certificationsEndPosition = certificationsSection.getBoundingClientRect().bottom + window.scrollY;
+        renderer.setSize(window.innerWidth, certificationsEndPosition);
+        
+        document.body.appendChild(renderer.domElement);
+
+        // Create the grid with a metallic look
+        const gridSize = 5000;
+        const divisions = 200;
+        const gridHelper = new THREE.GridHelper(gridSize, divisions, 0x00ff00, 0x00ffff); // Neon green and cyan grid
+        gridHelper.position.set(0, 0, 0);
+        gridHelper.rotation.x = Math.PI / 2;
+        scene.add(gridHelper);
+
+        // Camera position
+        camera.position.set(0, 50, 500);
+
+        // Create three light sources that act as scanners with robotic colors
+        const light1 = new THREE.PointLight(0x00ffff, 2, 1000); // Cyan light
+        const light2 = new THREE.PointLight(0x00ff00, 2, 1000); // Neon green light
+        const light3 = new THREE.PointLight(0xff00ff, 2, 1000); // Magenta light
+
+        light1.position.set(-2000, 200, 500);
+        light2.position.set(-2000, -200, 500);
+        light3.position.set(-2000, 400, 500);
+
+        scene.add(light1, light2, light3);
+
+        // Add floating metallic particles
+        const particles = new THREE.BufferGeometry();
+        const particleCount = 1000;
+        const particlePositions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            particlePositions[i * 3] = Math.random() * gridSize - gridSize / 2;
+            particlePositions[i * 3 + 1] = Math.random() * gridSize - gridSize / 2;
+            particlePositions[i * 3 + 2] = Math.random() * 1000 - 500;
+        }
+        particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({ color: 0xcccccc, size: 2 }); // Metallic gray particles
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        // Animate the grid, particles, and lights
+        function animateGrid() {
+            requestAnimationFrame(animateGrid);
+
+            // Move the lights horizontally across the scene for the scanning effect
+            light1.position.x += 5; 
+            light2.position.x += 4; 
+            light3.position.x += 6; 
+
+            if (light1.position.x > 2000) {  
+                light1.position.x = -2000;
+            }
+            if (light2.position.x > 2000) {
+                light2.position.x = -2000;
+            }
+            if (light3.position.x > 2000) {
+                light3.position.x = -2000;
+            }
+
+            gridHelper.rotation.z += 0.001;
+
+            // Move the grid to create a wave-like motion
+            gridHelper.position.y = Math.sin(Date.now() * 0.001) * 20;
+
+            // Move particles for floating effect
+            particleSystem.rotation.y += 0.002;
+
+            renderer.render(scene, camera);
+        }
+        animateGrid();
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', function () {
+            let width = window.innerWidth;
+            renderer.setSize(width, certificationsEndPosition);
+            camera.aspect = width / certificationsEndPosition;
+            camera.updateProjectionMatrix();
+        });
+
+        // Scroll-triggered Animations
+        function revealSections() {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < window.innerHeight - 100) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', revealSections);
+
+        // Interactive Background Particles
+        window.addEventListener('mousemove', (event) => {
+            let mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            let mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            particleSystem.rotation.x = mouseY * 0.05;
+            particleSystem.rotation.y = mouseX * 0.05;
+        });
+    </script>
+</body>
+</html>
